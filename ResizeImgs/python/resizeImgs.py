@@ -1,20 +1,33 @@
 #!/usr/bin/python
 #coding:UTF-8
 
-import PIL
+import PIL,glob
 from PIL import Image
 
-# old size: 640 x 480
-# new size: 600 x ?
+# list all image files:
 
-oldWidth = 640
-oldHeight= 480
+imgfiles = glob.glob("*.jpg") 
 
-newWidth = 600
-rat = newWidth / float(oldWidth)
-newHeight = int(oldHeight * rat)
+def_maxsize = 620
 
-img = Image.open("a4.jpg")
-img2 = img.resize((newWidth, newHeight),Image.ANTIALIAS)
-img2.save("a4_2.jpg")
+for imgf in imgfiles:
+	img = Image.open(imgf)
+	oldWidth = img.size[0]
+	oldHeight= img.size[1]
+	maxOldSize = max(oldWidth,oldHeight)
+	if maxOldSize > def_maxsize:
+		print imgf
+		print oldWidth,oldHeight
+
+		rat = def_maxsize / float(maxOldSize)
+
+		newWidth  = int(oldWidth * rat)
+		newHeight = int(oldHeight * rat)
+	else:
+		newWidth  = oldWidth
+		newHeight = oldHeight
+
+	img2 = img.resize((newWidth, newHeight),Image.ANTIALIAS)
+	newimgf = "newimgs/" + imgf
+	img2.save(newimgf)
 
